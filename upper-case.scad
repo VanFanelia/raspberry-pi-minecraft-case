@@ -1,55 +1,49 @@
+$fn = 12; 
+$fa = 3;
 use <library.scad-master/raspberrypi.scad>;
 use <lower-case.scad>;
+use <logo.scad>;
 
 include <surface.data>;
 
 module printSurface(){
 	
-	for(x=[0:1:len(surfaceData)-1]) {
-		for(y=[0:1:len(surfaceData[x])-1]){
-			translate([x,y,0])
-			cube([1,1,8-surfaceData[x][y]]);
-		}
-	}
-	
-	// water color for debug
-	color("blue")
-	translate([2,7,8-5])
-	cube([len(surfaceData)-5, len(surfaceData[0])-8, 0.0001]);
-}
-
-module top(){
-	difference(){
-		translate([0.5,4,8])
-		rotate([0,0,-90])
-		scale([3.4,3.4,2])
-		printSurface();
-		
-		union(){
-			/*
-			translate([2,-2,0])
-			translate([45,-28,0])
-			pi3();*/
-			
-			// back wall
-			translate([47,-30,0])
-			translate([-44.5,29,-5])
-				cube([89,2,23]);
-			
-			translate([72,-58,7.5])
-				cube([30, 57, 10]);
-			
-			translate([47,-30,0]){
-				bottom();
+	translate([
+	  -(len(surfaceData)-1) / 2, 
+	  -(len(surfaceData[0])-1) /2,
+	  0])
+	{
+		for(x=[0:1:len(surfaceData)-1]) {
+			for(y=[0:1:len(surfaceData[x])-1]){
+				translate([x,y,0])
+				cube([1,1,8-surfaceData[x][y]]);
 			}
 		}
 	}
 }
 
-module backWall() {
-	translate([-44.5,29,-5])
-		cube([89,2,23]);
-}	
+module top(){
+	difference(){
+		rotate([0,0,-90])
+		scale([3.5,3.5,1])
+		translate([-0.5,-0.35,17.5]){
+			printSurface();
+		}
+		scale([1.01,1.01,1])
+			lowerCase();
+		
+		scale([0.99,0.99,1])
+			lowerCase();
+	}
+	
+	color("grey")
+		translate([-40,-16,21])
+		rotate([0,0,-90])
+		scale([2.2,2.2,2])
+	  translate([1.0,0,0])
+		logo();
+}
+
 
 top();
-//backWall();
+
